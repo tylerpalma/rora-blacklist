@@ -1,0 +1,74 @@
+body {
+  padding: 50px;
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
+  background-image: url(/images/bg.jpg);
+  font-weight: 300;
+}
+
+.well.well-table {
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+}
+
+.header {
+  margin-bottom: 30px;
+}
+
+.header .brand {
+  width: 100%;
+  float: left;
+  margin-bottom: 15px;
+}
+
+.header .brand img {
+  width: 140px;
+  border: 7px solid #fff;
+  border-radius: 20px;
+  margin: auto;
+}
+
+.header h1 {
+  width: 100%;
+  float: left;
+  margin-bottom: 15px;
+  color: #fff;
+  text-align: center;
+  font-size: 4em;
+  fonct-weight: 300;
+}
+
+.header h2 {
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  font-weight: 100;
+}
+
+table#leaderboard {
+  font-size: 1.8em;
+  font-weight: 300;
+  margin-bottom: 0;
+}
+
+table#leaderboard th {
+  background-color: #d2d2d3;
+  font-weight: 400;
+  color: #555;
+}
+
+table#leaderboard tr td:first-child {
+  padding-left: 30px;
+}
+
+table#leaderboard tr td {
+  padding: 11px;
+}
+
+table#leaderboard tbody tr:nth-of-type(odd) td {
+  color: #888;
+}
+
+table#leaderboard tbody tr:nth-of-type(even) td {
+  color: #555;
+}

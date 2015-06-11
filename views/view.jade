@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  .container
+    .col-xs-12.header
+      .brand
+        img.img-responsive(src='http://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/d9/d9d552c5a569bb35be4c9eb66b554a20f51df36c_full.jpg')
+      h1 Reddit Racing Leaderboards
+      h2 Formula Ford @ Brands Hatch Indy
+    .col-xs-12.well.well-table
+      table#leaderboard.table.table-striped
+        thead
+          tr
+            th
+            th Username
+            th Lap
+            th Gap
+            th Date
+        tbody
+          - var n = 1;
+          each row in leaderboardData
+            tr
+              td= n++
+              td
+                a(href='#{row.steamURL}')= row.username
+              td= row.time
+              td= '+' + row.gap
+              td
+                small= row.timestamp
+
