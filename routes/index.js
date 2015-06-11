@@ -3,7 +3,6 @@ var fs      = require('fs');
 var request = require('request');
 var cheerio = require('cheerio');
 var _       = require('lodash');
-var Vue = require('vue');
 var CronJob = require('cron').CronJob;
 
 // get steam member list every hour
@@ -21,15 +20,6 @@ var db = monk('localhost:27017/blacklist');
 
 var router = express.Router();
 
-_.mixin({
-  'findByValues': function(collection, property, values) {
-    return _.filter(collection, function(item) {
-      return _.contains(values, item[property]);
-    });
-  }
-});
-
-
 /* GET home page. */
 router.get('/', function (req, res) {
   var leaderboard = db.get('leaderboard');
@@ -44,16 +34,6 @@ router.get('/', function (req, res) {
       });
     });
   });
-  /*leaderboard.find({}, {}, function(e, data) {
-    var filtered = _.findByValues(data, "username", drivers);
-    res.render('view', {
-      'leaderboardData': _.sortBy(filtered, 'time')
-    });
-  });*/
-
-  //res.render('view', {
-  //  'leaderboardData': leaderboard[0]//_.sortBy(leaderboard, 'time')
-  //});
 });
 
 router.get('/scrape', function (req, res) {
@@ -71,11 +51,6 @@ router.get('/scrape/members', function (req, res) {
 });
 
 /*====== utils =====*/
-
-/*function getInlineData () {
-  if (window.RORA && window.RORA.data) return window.RORA.data;
-  return null;
-}*/
 
 function scrapeData (track, car, page) {
   var collection = db.get('leaderboard');
@@ -169,5 +144,14 @@ function getMemberList (page) {
     }
   });
 }
+
+_.mixin({
+  'findByValues': function(collection, property, values) {
+    return _.filter(collection, function(item) {
+      return _.contains(values, item[property]);
+    });
+  }
+});
+
 
 module.exports = router;
