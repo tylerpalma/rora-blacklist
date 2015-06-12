@@ -32,7 +32,9 @@ const config = {
 
   // set mixin
   _.mixin({
-    'findByValues': (collection, property, values) => _.filter(collection, item => _.contains(values, item[property]))
+    'findByValues': (collection, property, values) =>
+      _.filter(collection, item =>
+        _.contains(values, item[property]))
   });
 }
 
