@@ -6,7 +6,7 @@ block content
       .brand
         img.img-responsive(src='http://cdn.akamai.steamstatic.com/steamcommunity/public/images/avatars/d9/d9d552c5a569bb35be4c9eb66b554a20f51df36c_full.jpg')
       h1 Reddit Racing Leaderboards
-      h2 Formula Ford @ Brands Hatch Indy
+      h2 Formula B @ Watkins Glen GP
     .col-xs-12.well.well-table
       table#leaderboard.table.table-striped
         thead
@@ -17,14 +17,19 @@ block content
             th Gap
             th Date
         tbody
-          - var n = 1;
-          each row in leaderboardData
+          if (leaderboardData.length > 0)
+            - var n = 1;
+            each row in leaderboardData
+              tr
+                td= n++
+                td
+                  a(href='#{row.steamURL}')!= row.username
+                td= row.time
+                td= '+' + row.gap
+                td
+                  small= row.timestamp
+          else
             tr
-              td= n++
-              td
-                a(href='#{row.steamURL}')= row.username
-              td= row.time
-              td= '+' + row.gap
-              td
-                small= row.timestamp
+              td(colspan='5')
+                p.text-center No times have been set.
 

@@ -5,13 +5,20 @@ var cheerio = require('cheerio');
 var _       = require('lodash');
 var CronJob = require('cron').CronJob;
 
+// set track/car combo
+// eventually add some fucking objects to hold the track and car IDs with pretty names
+var config = {
+  track: '2509185801',
+  car: '2976119256'
+};
+
 // get steam member list every hour
 new CronJob('0 * * * *', function() {
   getMemberList(1);
 }, null, true, 'America/Los_Angeles');
 // get leaderboard data every hour
 new CronJob('0 * * * *', function() {
-  scrapeData('1300627020', '2219682419', 1);
+  scrapeData(config.track, config.car, 1);
 }, null, true, 'America/Los_Angeles');
 
 var mongo = require('mongodb');
@@ -24,7 +31,7 @@ var router = express.Router();
 router.get('/', function (req, res) {
   var leaderboard = db.get('leaderboard');
   var members = db.get('members');
-  leaderboard.find({}, {}, function (err, data) {
+  leaderboard.find({ track: config.track, car: config.car }, {}, function (err, data) {
     var leaderboardData = data;
     members.find({}, {}, function (err, data) {
       var memberData = _.map(data, function (data) { return data.username });
@@ -36,22 +43,20 @@ router.get('/', function (req, res) {
   });
 });
 
-router.get('/scrape', function (req, res) {
-  res.render('scrape');
+// for manually triggering a lb scrape
+router.get('/scrape/leaderboards', function (req, res) {
+  scrapeData(config.track, config.car, 1);
+  res.redirect('/view');
 });
 
-router.get('/scrape/start', function (req, res) {
-  scrapeData(req.query.track, req.query.car, 1);
-  res.redirect('/scrape');
-});
-
+// for manually triggering a steam member scrape
 router.get('/scrape/members', function (req, res) {
   getMemberList(1);
   res.redirect('/view');
 });
 
-/*====== utils =====*/
 
+/*====== utils =====*/
 function scrapeData (track, car, page) {
   var collection = db.get('leaderboard');
   var url = 'http://cars-stats-steam.wmdportal.com/index.php/leaderboard?track=' + track + '&vehicle=' + car + '&page=' + page;
@@ -72,13 +77,13 @@ function scrapeData (track, car, page) {
           var gap = $this.find('td.gap span.gap').html();
           var assists = $this.find('td.assists img').last().attr('title');
           var timestamp = $this.find('td.timestamp').html();
-          var vehicle = $this.find('td.vehicle a').html() === 0 ? $this.find('td.vehicle a').html() : car;
+          var car = config.car;
 
           var data = {
             'username': username,
             'steamURL': steamURL,
             'track': track,
-            'vehicle': vehicle,
+            'car': car,
             'sectors': [
               sector[0],
               sector[1],
