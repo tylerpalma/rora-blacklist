@@ -14,8 +14,8 @@ block content
             th
             th Username
             th Lap
-            th Gap
-            th Date
+            th.hidden-xs Gap
+            th.hidden-xs Date
         tbody
           if (leaderboardData.length > 0)
             - var n = 1;
@@ -25,8 +25,8 @@ block content
                 td
                   a(href='#{row.steamURL}')!= row.username
                 td= row.time
-                td= '+' + row.gap
-                td
+                td.hidden-xs= '+' + row.gap
+                td.hidden-xs
                   small= row.timestamp
           else
             tr
