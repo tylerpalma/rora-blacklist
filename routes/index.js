@@ -22,11 +22,11 @@ const config = {
 
 {
   // get steam member list every hour
-  new CronJob('0 * * * *', () => {
+  new CronJob('1 * * * *', () => {
     getMemberList(1);
   }, null, true, 'America/Los_Angeles');
   // get leaderboard data every hour
-  new CronJob('0 * * * *', () => {
+  new CronJob('1 * * * *', () => {
     scrapeData(config.track, config.car, 1);
   }, null, true, 'America/Los_Angeles');
 
