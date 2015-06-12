@@ -1,2 +1,4 @@
 
-node_modules/*
+pm2.json
+node_modules
+log
