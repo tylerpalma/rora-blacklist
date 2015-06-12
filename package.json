@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www.js"
+    "start": "node --harmony_arrow_functions ./bin/www.js"
   },
   "dependencies": {
     "body-parser": "~1.12.4",

@@ -1,41 +1,50 @@
-var express = require('express');
-var fs      = require('fs');
-var request = require('request');
-var cheerio = require('cheerio');
-var _       = require('lodash');
-var CronJob = require('cron').CronJob;
+"use strict";
+
+let express = require('express');
+let fs      = require('fs');
+let request = require('request');
+let cheerio = require('cheerio');
+let _       = require('lodash');
+let CronJob = require('cron').CronJob;
+
+let mongo = require('mongodb');
+let monk = require('monk');
+let db = monk('localhost:27017/blacklist');
+
+let router = express.Router();
 
 // set track/car combo
 // eventually add some fucking objects to hold the track and car IDs with pretty names
-var config = {
+const config = {
   track: '2509185801',
   car: '2976119256'
 };
 
-// get steam member list every hour
-new CronJob('0 * * * *', function() {
-  getMemberList(1);
-}, null, true, 'America/Los_Angeles');
-// get leaderboard data every hour
-new CronJob('0 * * * *', function() {
-  scrapeData(config.track, config.car, 1);
-}, null, true, 'America/Los_Angeles');
+{
+  // get steam member list every hour
+  new CronJob('0 * * * *', function() {
+    getMemberList(1);
+  }, null, true, 'America/Los_Angeles');
+  // get leaderboard data every hour
+  new CronJob('0 * * * *', function() {
+    scrapeData(config.track, config.car, 1);
+  }, null, true, 'America/Los_Angeles');
 
-var mongo = require('mongodb');
-var monk = require('monk');
-var db = monk('localhost:27017/blacklist');
-
-var router = express.Router();
+  // set mixin
+  _.mixin({
+    'findByValues': (collection, property, values) => _.filter(collection, item => _.contains(values, item[property]))
+  });
+}
 
 /* GET home page. */
-router.get('/', function (req, res) {
-  var leaderboard = db.get('leaderboard');
-  var members = db.get('members');
-  leaderboard.find({ track: config.track, car: config.car }, {}, function (err, data) {
-    var leaderboardData = data;
-    members.find({}, {}, function (err, data) {
-      var memberData = _.map(data, function (data) { return data.username });
-      var filtered = _.findByValues(leaderboardData, 'username', memberData);
+router.get('/', (req, res) => {
+  let leaderboard = db.get('leaderboard');
+  let members = db.get('members');
+  leaderboard.find({ track: config.track, car: config.car }, {}, (err, data) => {
+    let leaderboardData = data;
+    members.find({}, {}, (err, data) => {
+      let memberData = data.map(data => data.username);
+      let filtered = _.findByValues(leaderboardData, 'username', memberData);
       res.render('view', {
         'leaderboardData': _.sortBy(filtered, 'time')
       });
@@ -44,119 +53,97 @@ router.get('/', function (req, res) {
 });
 
 // for manually triggering a lb scrape
-router.get('/scrape/leaderboards', function (req, res) {
+router.get('/scrape/leaderboards', (req, res) => {
   scrapeData(config.track, config.car, 1);
-  res.redirect('/view');
+  res.redirect('/');
 });
 
 // for manually triggering a steam member scrape
-router.get('/scrape/members', function (req, res) {
+router.get('/scrape/members', (req, res) => {
   getMemberList(1);
-  res.redirect('/view');
+  res.redirect('/');
 });
 
 
 /*====== utils =====*/
 function scrapeData (track, car, page) {
-  var collection = db.get('leaderboard');
-  var url = 'http://cars-stats-steam.wmdportal.com/index.php/leaderboard?track=' + track + '&vehicle=' + car + '&page=' + page;
+  let collection = db.get('leaderboard');
+  let url = 'http://cars-stats-steam.wmdportal.com/index.php/leaderboard?track=' + track + '&vehicle=' + car + '&page=' + page;
 
   console.log('Scraping leaderboard page: ' + page);
-  request(url, function (err, res, html) {
-    if (!err) {
-      var $ = cheerio.load(html);
-      var data;
+  request(url, (err, res, html) => {
+    if (err) return console.log(err);
 
-      if ($('#leaderboard tbody tr td.rank').length) {
-        $('#leaderboard tbody tr').each(function () {
-          $this = $(this);
-          var username = $this.find('td.user a').html();
-          var steamURL = $this.find('td.user a').attr('href');
-          var sector = $this.find('td.time').attr('title').split('\n');
-          var time = $this.find('td.time span.time').html();
-          var gap = $this.find('td.gap span.gap').html();
-          var assists = $this.find('td.assists img').last().attr('title');
-          var timestamp = $this.find('td.timestamp').html();
-          var car = config.car;
+    let $ = cheerio.load(html);
 
-          var data = {
-            'username': username,
-            'steamURL': steamURL,
-            'track': track,
-            'car': car,
-            'sectors': [
-              sector[0],
-              sector[1],
-              sector[2]
-            ],
-            'time': time,
-            'gap': gap,
-            'assists': assists,
-            'timestamp': timestamp
-          };
-          //collection.insert(data);
-          collection.update(
-            { username: username },
-            data,
-            { upsert: true }
-          );
-        });
+    if ($('#leaderboard tbody tr td.rank').length) {
+      $('#leaderboard tbody tr').each(function () {
+        let $this = $(this);
+        let username = $this.find('td.user a').html();
+        let steamURL = $this.find('td.user a').attr('href');
+        let sector = $this.find('td.time').attr('title').split('\n');
+        let time = $this.find('td.time span.time').html();
+        let gap = $this.find('td.gap span.gap').html();
+        let assists = $this.find('td.assists img').last().attr('title');
+        let timestamp = $this.find('td.timestamp').html();
+        let car = config.car;
+        let data = {
+          username, steamURL, track, car, time, gap, assists, timestamp,
+          'sectors': [
+            sector[0],
+            sector[1],
+            sector[2]
+          ]
+        };
 
-        scrapeData(track, car, ++page);
-      } else {
-        console.log('Leaderboard scrape completed.');
-      }
+        //collection.insert(data);
+        collection.update(
+          { username },
+          data,
+          { upsert: true }
+        );
+      });
+
+      scrapeData(track, car, ++page);
     } else {
-      console.log(err);
+      console.log('Leaderboard scrape completed.');
     }
   });
 }
 
 function getMemberList (page) {
-  var collection = db.get('members');
-  var url = 'http://steamcommunity.com/groups/redditracing/members/?p=';
+  let collection = db.get('members');
+  let url = 'http://steamcommunity.com/groups/redditracing/members/?p=';
 
   console.log('Scraping leaderboard page: ' + page);
-  request(url + page, function (err, res, html) {
-    if (!err) {
-      var $ = cheerio.load(html);
-      var members;
+  request(url + page, (err, res, html) => {
+    if (err) return console.log(err);
 
-      if ($('.member_block').length) {
-        $('.member_block').each(function () {
-          $this = $(this);
+    let $ = cheerio.load(html);
+    let members;
 
-          var username = $this.find('.member_block .member_block_content div a.linkFriend').html();
-          var steamURL = $this.find('.member_block .member_block_content div a.linkFriend').attr('href');
-          var data = {
-            'username': username,
-            'steamURL': steamURL
-          };
+    if ($('.member_block').length) {
+      $('.member_block').each(function () {
+        let $this = $(this);
+        let username = $this.find('.member_block .member_block_content div a.linkFriend').html();
+        let steamURL = $this.find('.member_block .member_block_content div a.linkFriend').attr('href');
+        let data = {
+          'username': username,
+          'steamURL': steamURL
+        };
 
-          collection.update(
-            { username: username },
-            data,
-            { upsert: true }
-          );
-        });
+        collection.update(
+          { username: username },
+          data,
+          { upsert: true }
+        );
+      });
 
-        getMemberList(++page);
-      } else {
-        console.log('Memberlist scrape completed.');
-      }
+      getMemberList(++page);
     } else {
-      console.log(err);
+      console.log('Memberlist scrape completed.');
     }
   });
 }
-
-_.mixin({
-  'findByValues': function(collection, property, values) {
-    return _.filter(collection, function(item) {
-      return _.contains(values, item[property]);
-    });
-  }
-});
-
 
 module.exports = router;
