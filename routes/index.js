@@ -42,7 +42,7 @@ const config = {
 router.get('/', (req, res) => {
   let leaderboard = db.get('leaderboard');
   let members = db.get('members');
-  leaderboard.find({ track: config.track, car: config.car }, {}, (err, data) => {
+  leaderboard.find(_.pick(config, 'track', 'car'), {}, (err, data) => {
     let leaderboardData = data;
     members.find({}, {}, (err, data) => {
       let memberData = data.map(data => data.username);
@@ -65,7 +65,6 @@ router.get('/scrape/members', (req, res) => {
   getMemberList(1);
   res.redirect('/');
 });
-
 
 /*====== utils =====*/
 function scrapeData (track, car, page) {
@@ -98,12 +97,7 @@ function scrapeData (track, car, page) {
           ]
         };
 
-        //collection.insert(data);
-        collection.update(
-          { username },
-          data,
-          { upsert: true }
-        );
+        collection.update({username}, data, {upsert: true});
       });
 
       scrapeData(track, car, ++page);
@@ -134,10 +128,7 @@ function getMemberList (page) {
           'steamURL': steamURL
         };
 
-        collection.update(
-          { username: username },
-          data,
-          { upsert: true }
+        collection.update({username}, data, {upsert: true}
         );
       });
 
