@@ -1,8 +1,7 @@
 body {
   padding: 50px 0;
   font-family: "Roboto", Helvetica, Arial, sans-serif;
-  background-image: url(/images/bg.jpg);
-  background-attachment: fixed;
+  background: url(/images/bg.jpg) no-repeat center center fixed;
   background-size: cover;
   font-weight: 300;
 }
