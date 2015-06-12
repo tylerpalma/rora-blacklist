@@ -22,11 +22,11 @@ const config = {
 
 {
   // get steam member list every hour
-  new CronJob('0 * * * *', function() {
+  new CronJob('0 * * * *', () => {
     getMemberList(1);
   }, null, true, 'America/Los_Angeles');
   // get leaderboard data every hour
-  new CronJob('0 * * * *', function() {
+  new CronJob('0 * * * *', () => {
     scrapeData(config.track, config.car, 1);
   }, null, true, 'America/Los_Angeles');
 
@@ -77,7 +77,7 @@ function scrapeData (track, car, page) {
     let $ = cheerio.load(html);
 
     if ($('#leaderboard tbody tr td.rank').length) {
-      $('#leaderboard tbody tr').each(function () {
+      $('#leaderboard tbody tr').each(() => {
         let $this = $(this);
         let username = $this.find('td.user a').html();
         let steamURL = $this.find('td.user a').attr('href');
@@ -123,7 +123,7 @@ function getMemberList (page) {
     let members;
 
     if ($('.member_block').length) {
-      $('.member_block').each(function () {
+      $('.member_block').each(() => {
         let $this = $(this);
         let username = $this.find('.member_block .member_block_content div a.linkFriend').html();
         let steamURL = $this.find('.member_block .member_block_content div a.linkFriend').attr('href');
