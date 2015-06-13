@@ -57,6 +57,10 @@ table#leaderboard th {
   color: #555;
 }
 
+table#leaderboard th.sectors {
+  text-align: center;
+}
+
 table#leaderboard tr td:first-child {
   padding-left: 30px;
 }
@@ -69,8 +73,47 @@ table#leaderboard tbody tr:nth-of-type(odd) td {
   color: #888;
 }
 
+table#leaderboard tbody tr:nth-of-type(even) {
+  display: none;
+}
+
 table#leaderboard tbody tr:nth-of-type(even) td {
-  color: #555;
+  color: #242424;
+  background-color: #3b3b3b;
+}
+
+button.sectors {
+  width: 100%;
+  height: 100%;
+  background-color: #e2e2e3;
+  border: 0;
+  text-align: center;
+  font-size: 1em;
+}
+
+button.sectors:hover {
+  background-color: #d4d4d4;
+}
+
+button.sectors:focus {
+  outline: 0;
+}
+
+button.sectors.open {
+  color: #d8d8d8;
+  background-color: #c3c3c3;
+}
+
+.sector-time {
+  width: 33.333%;
+  float: left;
+  text-align: center;
+  font-weight: 900;
+}
+
+.sector-time span {
+  color: #F5F48E;
+  font-weight: 100;
 }
 
 @media (min-width: 768px) {

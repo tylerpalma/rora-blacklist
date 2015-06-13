@@ -47,8 +47,9 @@ router.get('/', (req, res) => {
     members.find({}, {}, (err, data) => {
       let memberData = data.map(data => data.username);
       let filtered = _.findByValues(leaderboardData, 'username', memberData);
+      let sorted = _.sortBy(filtered, 'time');
       res.render('view', {
-        'leaderboardData': _.sortBy(filtered, 'time')
+        'leaderboardData': sorted
       });
     });
   });
@@ -91,9 +92,9 @@ function scrapeData (track, car, page) {
         let data = {
           username, steamURL, track, car, time, gap, assists, timestamp,
           'sectors': [
-            sector[0],
-            sector[1],
-            sector[2]
+            trimSector(sector[0]),
+            trimSector(sector[1]),
+            trimSector(sector[2])
           ]
         };
 
@@ -137,6 +138,12 @@ function getMemberList (page) {
       console.log('Memberlist scrape completed.');
     }
   });
+}
+
+function trimSector (string) {
+  let strings = string.trim().split(':');
+  if (strings[1] === '0') return strings[2];
+  return strings[1] + ':' + strings[2];
 }
 
 module.exports = router;

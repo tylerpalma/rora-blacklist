@@ -14,8 +14,9 @@ block content
             th
             th Username
             th Lap
-            th.hidden-xs Gap
-            th.hidden-xs Date
+            th.hidden-xs Gap to WR
+            th.hidden Date
+            th.sectors.hidden-xs Sectors
         tbody
           if (leaderboardData.length > 0)
             - var n = 1;
@@ -26,10 +27,19 @@ block content
                   a(href='#{row.steamURL}')!= row.username
                 td= row.time
                 td.hidden-xs= '+' + row.gap
-                td.hidden-xs
+                td.hidden
                   small= row.timestamp
+                td.hidden-xs
+                  button.sectors(data-show-sectors)
+                    i.fa.fa-angle-down
+              tr
+                td(colspan="6")
+                  each sector, i in row.sectors
+                    .sector-time= 'S' + (i + 1)
+                      span= sector
+
           else
             tr
-              td(colspan='5')
+              td(colspan='6')
                 p.text-center No times have been set.
 
