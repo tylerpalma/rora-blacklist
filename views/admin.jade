@@ -1,0 +1,185 @@
+extends layout
+
+block content
+  .container
+    .col-xs-12
+      .well
+        .row
+          form.form(action="/admin/add/time", method="POST")
+            .col-sm-6
+              label Username
+              input.form-control(type="text", name="username")
+              label Lap Time
+              input.form-control(type="text", name="time", placeholder="MM:SS.sss")
+              label Timestamp
+              input.form-control(type="text", name="timestamp", placeholder="DD/MM/YYYY HH:MM 24HR")
+            .col-sm-6
+              label Track
+              select.form-control(name='track')
+                option(value='4241994684') Autodromo Nazionale Monza GP
+                option(value='368740158') Autodromo Nazionale Monza Short
+                option(value='832629329') Azure Circuit
+                option(value='560711985') Azure Coast
+                option(value='550129415') Azure Coast Stage 1
+                option(value='3514087720') Azure Coast Stage 2
+                option(value='2557706171') Azure Coast Stage 3
+                option(value='2358176792') Azure Coast Westbound
+                option(value='921120824') Bathurst
+                option(value='1988984740') Brands Hatch GP
+                option(value='1300627020') Brands Hatch Indy
+                option(value='3387066030') Brno
+                option(value='328972919') Cadwell Club Circuit
+                option(value='1876749797') Cadwell GP
+                option(value='2886778255') Cadwell Woodland
+                option(value='2701023129') California Highway Full
+                option(value='928006536') California Highway Reverse
+                option(value='1676943041') California Highway Stage 1
+                option(value='940391868') California Highway Stage 2
+                option(value='3963464445') California Highway Stage 3
+                option(value='2559054883') Chesterfield
+                option(value='3252038398') Circuit de Barcelona-Catalunya Club
+                option(value='521933422') Circuit de Barcelona-Catalunya GP
+                option(value='3296775302') Circuit de Barcelona-Catalunya National
+                option(value='904625875') Circuit de Spa-Francorchamps
+                option(value='1740968730') Circuit des 24 Heures du Mans
+                option(value='354022214') Donington Park GP
+                option(value='3100947921') Donington Park National
+                option(value='1735854797') Dubai Autodrome Club
+                option(value='3633079779') Dubai Autodrome GP
+                option(value='3584254603') Dubai Autodrome International
+                option(value='4263239849') Dubai Autodrome National
+                option(value='4062453922') Dubai Kartdrome
+                option(value='3228224516') Glencairn
+                option(value='766599953') Glencairn East
+                option(value='3848172327') Glencairn East Reverse
+                option(value='2774122716') Glencairn Reverse
+                option(value='2886187703') Glencairn West
+                option(value='3381341938') Glencairn West Reverse
+                option(value='3134524219') Greenwood Karting Circuit
+                option(value='1695182971') Hockenheim GP
+                option(value='2317824311') Hockenheim National
+                option(value='1768660198') Hockenheim Short
+                option(value='920145926') Imola
+                option(value='3267032607') Le Circuit Bugatti
+                option(value='2682943968') Mazda Raceway Laguna Seca
+                option(value='697498609') Nordschleife
+                option(value='1459212514') Nordschleife Stage 1
+                option(value='3994580005') Nordschleife Stage 2
+                option(value='1128950148') Nordschleife Stage 3
+                option(value='3348999902') N&uuml;rburgring GP
+                option(value='4048000896') N&uuml;rburgring M&uuml;llenbach
+                option(value='3585230195') N&uuml;rburgring Sprint
+                option(value='3484251453') N&uuml;rburgring Sprint Short
+                option(value='2935667702') Oschersleben C Circuit
+                option(value='3100781576') Oschersleben GP
+                option(value='816601966') Oschersleben National
+                option(value='2273942801') Oulton Park Fosters
+                option(value='545979690') Oulton Park International
+                option(value='2417267773') Oulton Park Island
+                option(value='3634666530') Road America
+                option(value='2535224250') Sakitto GP
+                option(value='2820797104') Sakitto International
+                option(value='3034141030') Sakitto National
+                option(value='3415685177') Sakitto Sprint
+                option(value='1641471184') Silverstone GP
+                option(value='1101719627') Silverstone International
+                option(value='1952936927') Silverstone National
+                option(value='1600840139') Silverstone Stowe
+                option(value='3427627286') Snetterton 100
+                option(value='1058872832') Snetterton 200
+                option(value='1508903068') Snetterton 300
+                option(value='2840687665') Sonoma Raceway GP
+                option(value='3299764567') Sonoma Raceway National
+                option(value='1035110721') Sonoma Raceway Short
+                option(value='4250218976') Summerton
+                option(value='1408845203') Summerton National
+                option(value='2689053728') Summerton Sprint
+                option(value='2509185801') Watkins Glen GP
+                option(value='1590386668') Watkins Glen Short
+                option(value='2445435734') Willow Springs Horse Thief Mile
+                option(value='4191654388') Willow Springs International Raceway
+                option(value='1836888499') Zhuhai International Circuit
+                option(value='3934256239') Zolder
+              label Car
+              select.form-control(name='car')
+                option(value='0') Overall best
+                option(value='844159614') 125cc Shifter Kart
+                option(value='3357033447') 250cc Superkart
+                option(value='2022787216') Alpine A450
+                option(value='2524566288') Ariel Atom 300 Supercharged
+                option(value='607772150') Ariel Atom 500 V8
+                option(value='526708607') Ariel Atom Mugen
+                option(value='3970726840') Aston Martin Rapide S Hydrogen Hybrid
+                option(value='1452261378') Aston Martin V12 Vantage GT3
+                option(value='2086246081') Aston Martin V8 Vantage GT4
+                option(value='3227065186') Audi R18 TDI
+                option(value='1884411907') Audi R8 LMS Ultra
+                option(value='1469658023') Audi R8 V10 plus
+                option(value='1400443574') BAC Mono
+                option(value='987814806') Bentley Continental GT3
+                option(value='3800867225') Bentley Speed 8
+                option(value='3068790356') BMW 1-Series M Coupe
+                option(value='779111340') BMW 320 Turbo Group 5
+                option(value='1368036017') BMW M1 Procar
+                option(value='3360868789') BMW M3 E30 Group A
+                option(value='2929049241') BMW M3 GT
+                option(value='2749517114') BMW M3 GT4
+                option(value='975104023') BMW V12 LMR
+                option(value='1161219858') BMW Z4 GT3
+                option(value='578910088') Caper Monterey Stockcar
+                option(value='3408754612') Caterham Seven Classic
+                option(value='675194619') Caterham SP/300.R
+                option(value='4132283684') Caterham Superlight R500
+                option(value='1639105598') Ford Escort Mk1 RS1600
+                option(value='2556846404') Ford Focus RS
+                option(value='2520631554') Ford MkIV
+                option(value='1111049682') Ford Mustang Boss 302R1
+                option(value='4283632081') Ford Mustang Cobra TransAm
+                option(value='3041492578') Ford Sierra RS500 Cosworth Group A
+                option(value='1817703058') Ford Zakspeed Capri Group 5
+                option(value='1909945073') Formula A
+                option(value='2976119256') Formula B
+                option(value='3253292325') Formula C
+                option(value='2588707625') Formula Gulf 1000
+                option(value='2219682419') Formula Rookie
+                option(value='310900789') Ginetta G40 Junior
+                option(value='3124293020') Ginetta G55 GT3
+                option(value='2091910841') Ginetta G55 GT4
+                option(value='3620711768') GUMPERT apollo S
+                option(value='578969971') Lotus 49 Cosworth
+                option(value='2974350450') Lotus 72D Cosworth
+                option(value='2459105748') Lotus 78 Cosworth
+                option(value='1959097924') Lotus 98T Renault Turbo
+                option(value='1355771595') Marek RP 219D LMP2
+                option(value='2264479929') Marek RP 339H LMP1
+                option(value='3850842786') McLaren 12C
+                option(value='3128055308') McLaren 12C GT3
+                option(value='307010432') McLaren F1
+                option(value='3293397987') McLaren F1 GTR Long Tail
+                option(value='2546290331') McLaren P1&trade;
+                option(value='262982797') Mercedes-Benz 190E 2.5-16 Evolution2 DTM
+                option(value='4209306796') Mercedes-Benz 300SEL 6.8 AMG
+                option(value='2772044758') Mercedes-Benz A45 AMG
+                option(value='3769906724') Mercedes-Benz AMG C-Coupe DTM
+                option(value='1979398129') Mercedes-Benz CLK-LM
+                option(value='2565700839') Mercedes-Benz SLS AMG
+                option(value='274862187') Mercedes-Benz SLS AMG GT3
+                option(value='998947753') Mitsubishi Lancer Evolution X FQ400
+                option(value='4196902797') Oreca 03 Nissan
+                option(value='2232288208') Pagani Huayra
+                option(value='2677051185') Pagani Zonda Cinque Roadster
+                option(value='2228078825') Pagani Zonda R
+                option(value='2373461986') Palmer Jaguar JP-LM
+                option(value='1231996358') Radical SR3-RS
+                option(value='152867459') Radical SR8-RX
+                option(value='3646257473') Renault Clio Cup
+                option(value='1694837381') Renault Megane R.S. 265
+                option(value='558051123') Ruf CTR3
+                option(value='2248141984') Ruf CTR3 SMS-R
+                option(value='462547146') Ruf RGT-8
+                option(value='2274208491') Ruf RGT-8 GT3
+                option(value='146414985') RWD P20 LMP2
+                option(value='1023089804') RWD P30 LMP1
+                option(value='65306143') Sauber C9 Mercedes-Benz
+                option(value='4114837419') W Motors Lykan HyperSport
+              input.btn.btn-primary(type="submit", value="Add Time")

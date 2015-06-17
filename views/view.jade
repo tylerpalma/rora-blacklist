@@ -26,7 +26,10 @@ block content
                 td
                   a(href='#{row.steamURL}')!= row.username
                 td= row.time
-                td.hidden-xs= '+' + row.gap
+                  if (row.gap != '')
+                    td.hidden-xs= '+' + row.gap
+                  else
+                    td.hidden-xs &nbsp;
                 td.hidden
                   small= row.timestamp
                 td.hidden-xs
@@ -34,9 +37,12 @@ block content
                     i.fa.fa-angle-down
               tr
                 td(colspan="6")
-                  each sector, i in row.sectors
-                    .sector-time= 'S' + (i + 1)
-                      span= sector
+                  if (row.sectors != 'xbox')
+                    each sector, i in row.sectors
+                      .sector-time= 'S' + (i + 1)
+                        span= sector
+                  else
+                    p.text-center Xbox Lap Time
 
           else
             tr

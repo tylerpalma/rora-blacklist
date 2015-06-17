@@ -41,15 +41,20 @@ const config = {
 /* GET home page. */
 router.get('/', (req, res) => {
   let leaderboard = db.get('leaderboard');
+  let xboxLeaderboard = db.get('xboxLeaderboard');
   let members = db.get('members');
+
   leaderboard.find(_.pick(config, 'track', 'car'), {}, (err, data) => {
     let leaderboardData = data;
-    members.find({}, {}, (err, data) => {
-      let memberData = data.map(data => data.username);
-      let filtered = _.findByValues(leaderboardData, 'username', memberData);
-      let sorted = _.sortBy(filtered, 'time');
-      res.render('view', {
-        'leaderboardData': sorted
+    xboxLeaderboard.find({}, {}, (err, data) => {
+      let xboxLeaderboardData = data;
+      members.find({}, {}, (err, data) => {
+        let memberData = data.map(data => data.username);
+        let filtered = _.findByValues(leaderboardData, 'username', memberData);
+        let sorted = _.sortBy(filtered.concat(xboxLeaderboardData), 'time');
+        res.render('view', {
+          'leaderboardData': sorted
+        });
       });
     });
   });
@@ -64,6 +69,30 @@ router.get('/scrape/leaderboards', (req, res) => {
 // for manually triggering a steam member scrape
 router.get('/scrape/members', (req, res) => {
   getMemberList(1);
+  res.redirect('/');
+});
+
+router.get('/admin', (req, res) => {
+  res.render('admin');
+});
+
+router.post('/admin/add/time', (req, res) => {
+  console.log(req.body.username);
+  let collection = db.get('xboxLeaderboard');
+
+  let data = {
+    username: req.body.username,
+    sectors: 'xbox',
+    time: req.body.time,
+    gap: '',
+    assists: 'xbox',
+    timestamp: req.body.timestamp,
+    track: req.body.track,
+    car: req.body.car
+  };
+
+  collection.update({username: req.body.username}, data, {upsert: true});
+
   res.redirect('/');
 });
 
