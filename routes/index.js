@@ -70,7 +70,7 @@ router.get('/scrape/members', (req, res) => {
 /*====== utils =====*/
 function scrapeData (track, car, page) {
   let collection = db.get('leaderboard');
-  let url = 'http://cars-stats-steam.wmdportal.com/index.php/leaderboard?track=${track}&vehicle=${car}&page=${page}';
+  let url = 'http://cars-stats-steam.wmdportal.com/index.php/leaderboard?track=' + track + '&vehicle=' + car + '&page=' + page;
 
   console.log('Scraping leaderboard page: ' + page);
   request(url, (err, res, html) => {
@@ -110,10 +110,10 @@ function scrapeData (track, car, page) {
 
 function getMemberList (page) {
   let collection = db.get('members');
-  let url = 'http://steamcommunity.com/groups/redditracing/members/?p=${page}';
+  let url = 'http://steamcommunity.com/groups/redditracing/members/?p=';
 
   console.log('Scraping leaderboard page: ' + page);
-  request(url, (err, res, html) => {
+  request(url + page, (err, res, html) => {
     if (err) return console.log(err);
 
     let $ = cheerio.load(html);
@@ -142,7 +142,8 @@ function getMemberList (page) {
 
 function trimSector (string) {
   let strings = string.trim().split(':');
-  return (strings[1] === '0') ? strings[2] : '${strings[1]}:${strings[2]}';
+  if (strings[1] === '0') return strings[2];
+  return strings[1] + ':' + strings[2];
 }
 
 module.exports = router;
